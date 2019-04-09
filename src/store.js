@@ -1,4 +1,4 @@
-import { setIn, getIn } from "./storeUtils";
+import { setIn, getIn } from './storeUtils';
 
 let state = {};
 let listeners = [];
@@ -20,8 +20,8 @@ export function setState(mutation) {
 
   state = setIn(state, path, newValue);
 
-  let currentListeners = listeners;
-  for (let i = 0; i < currentListeners.length; i++) {
+  const currentListeners = listeners;
+  for (let i = 0; i < currentListeners.length; i += 1) {
     currentListeners[i](state);
   }
 }
@@ -31,8 +31,8 @@ export function subscribe(listener) {
 }
 
 export function unsubscribe(listener) {
-  let out = [];
-  for (let i = 0; i < listeners.length; i++) {
+  const out = [];
+  for (let i = 0; i < listeners.length; i += 1) {
     if (listeners[i] === listener) {
       listener = null;
     } else {

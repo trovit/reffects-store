@@ -1,4 +1,4 @@
-import { setIn } from "./storeUtils";
+import { setIn } from './storeUtils';
 
 describe('setIn', () => {
   it('can set objects when path is empty', () => {

@@ -1,19 +1,19 @@
-import { createElement, Component } from "react";
-import * as store from "./store";
+import { createElement, Component } from 'react';
+import * as store from './store';
 
-export function subscribe(mapStateToProps) {
+export default function subscribe(mapStateToProps) {
   return Child => {
     function Wrapper(props) {
       Component.call(this, props);
       let state = mapStateToProps(store.getState(), props);
-      let update = () => {
-        let mapped = mapStateToProps(store.getState(), props);
-        for (let i in mapped)
+      const update = () => {
+        const mapped = mapStateToProps(store.getState(), props);
+        for (const i in mapped)
           if (mapped[i] !== state[i]) {
             state = mapped;
             return this.forceUpdate();
           }
-        for (let i in state)
+        for (const i in state)
           if (!(i in mapped)) {
             state = mapped;
             return this.forceUpdate();

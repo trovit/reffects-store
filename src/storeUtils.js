@@ -7,7 +7,7 @@ export const getIn = (state, path, defaultValue) => {
 };
 
 export const setIn = (state, path, valueToSet) => {
-  return _setWith({ ...state }, path, valueToSet, (nsValue) => {
+  return _setWith({ ...state }, path, valueToSet, nsValue => {
     return _clone(nsValue);
   });
 };
