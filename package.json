@@ -1,36 +1,27 @@
 {
-  "name": "spike-todo-declarative-effects",
-  "version": "1.0.0",
+  "name": "reffects-store",
+  "version": "0.1.0",
   "description": "",
   "keywords": [],
   "main": "src/index.js",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "babel-jest": "^24.7.1",
+    "jest": "^24.7.1",
     "lodash.clone": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.setwith": "^4.3.2",
-    "react": "16.8.3",
-    "react-dom": "16.8.3",
-    "react-scripts": "2.1.8",
-    "reselect": "^4.0.0"
-  },
-  "devDependencies": {
-    "typescript": "3.3.3"
+    "react": "^16.8.6"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "jest"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "jest": {
-    "watchPathIgnorePatterns": [
-      "node_modules"
-    ]
+  "peerDependencies": {
+    "lodash.clone": "^4",
+    "lodash.get": "^4",
+    "lodash.setwith": "^4",
+    "react": "^0.14.0 || ^15.0.0 || ^16"
   }
 }
