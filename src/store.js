@@ -7,6 +7,12 @@ export function getState(path = []) {
   return getIn(state, path, state);
 }
 
+export function executeAllListeners() {
+  listeners.forEach(function iterateListeners(currentListener) {
+    currentListener(state);
+  });
+}
+
 export function setState(mutation) {
   if (!mutation) {
     return;
@@ -20,10 +26,7 @@ export function setState(mutation) {
 
   state = setIn(state, path, newValue);
 
-  const currentListeners = listeners;
-  for (let i = 0; i < currentListeners.length; i += 1) {
-    currentListeners[i](state);
-  }
+  executeAllListeners();
 }
 
 export function subscribe(listener) {
@@ -32,13 +35,15 @@ export function subscribe(listener) {
 
 export function unsubscribe(listener) {
   const out = [];
-  for (let i = 0; i < listeners.length; i += 1) {
-    if (listeners[i] === listener) {
+
+  listeners.forEach(function iterateListeners(currentListener) {
+    if (currentListener === listener) {
       listener = null;
     } else {
-      out.push(listeners[i]);
+      out.push(currentListener);
     }
-  }
+  });
+
   listeners = out;
 }
 

@@ -1,25 +1,24 @@
 import { createElement, Component } from 'react';
-import * as store from './store';
+import * as storeModule from './store';
 
-export default function subscribe(mapStateToProps) {
+export default function subscribe(mapStateToProps, store = storeModule) {
   return Child => {
     function Wrapper(props) {
       Component.call(this, props);
-      let state = mapStateToProps(store.getState(), props);
+      let currentMappedProps = mapStateToProps(store.getState(), props);
+
       const update = () => {
-        const mapped = mapStateToProps(store.getState(), props);
-        for (const i in mapped)
-          if (mapped[i] !== state[i]) {
-            state = mapped;
+        const nextMappedProps = mapStateToProps(store.getState(), props);
+
+        // compares the current derived state props against the current state props
+        for (const i in nextMappedProps) {
+          if (nextMappedProps[i] !== currentMappedProps[i]) {
+            currentMappedProps = nextMappedProps;
             return this.forceUpdate();
           }
-        for (const i in state)
-          if (!(i in mapped)) {
-            state = mapped;
-            return this.forceUpdate();
-          }
+        }
       };
-      this.componentWillReceiveProps = p => {
+      this.UNSAFE_componentWillReceiveProps = p => {
         props = p;
         update();
       };
@@ -30,7 +29,7 @@ export default function subscribe(mapStateToProps) {
         store.unsubscribe(update);
       };
       this.render = () =>
-        createElement(Child, Object.assign({}, this.props, state));
+        createElement(Child, { ...this.props, ...currentMappedProps });
     }
 
     return ((Wrapper.prototype = Object.create(
