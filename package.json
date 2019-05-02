@@ -8,8 +8,11 @@
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^9.0.0",
     "babel-jest": "^24.7.1",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.1.0",
@@ -21,7 +24,8 @@
     "lodash.get": "^4.4.2",
     "lodash.setwith": "^4.3.2",
     "prettier": "^1.16.4",
-    "react": "^16.8.6"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "scripts": {
     "test": "jest",
@@ -32,6 +36,7 @@
     "lodash.clone": "^4",
     "lodash.get": "^4",
     "lodash.setwith": "^4",
-    "react": "^0.14.0 || ^15.0.0 || ^16"
+    "react": "^0.14.0 || ^15.0.0 || ^16",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16"
   }
 }
