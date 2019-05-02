@@ -89,8 +89,7 @@ describe('mutating values in the store', () => {
     const state = { koko: { loko: { moko: 'poko' } } };
     store.initialize(state);
 
-    store.setState();
-
+    expect(() => store.setState()).toThrow(new Error('No mutation'));
     expect(store.getState()).toEqual(state);
   });
 
@@ -98,8 +97,9 @@ describe('mutating values in the store', () => {
     const state = { koko: { loko: { moko: 'poko' } } };
     store.initialize(state, 'anyValue');
 
-    store.setState({});
-
+    expect(() => store.setState({})).toThrow(
+      new Error('Empty path in mutation')
+    );
     expect(store.getState()).toEqual(state);
   });
 
@@ -107,7 +107,9 @@ describe('mutating values in the store', () => {
     const state = { koko: { loko: { moko: 'poko' } } };
     store.initialize(state, 'anyValue');
 
-    store.setState({ newValue: 42 });
+    expect(() => store.setState({ newValue: 42 })).toThrow(
+      new Error('Empty path in mutation')
+    );
 
     expect(store.getState()).toEqual(state);
   });
@@ -118,7 +120,7 @@ test('subscribing to store changes', () => {
   const path = ['koko'];
   store.initialize({ koko: 'loko' });
 
-  store.subscribe(function(newState) {
+  store.subscribe(function (newState) {
     expect(newState).toEqual({ koko: newValue });
   });
 
@@ -132,7 +134,7 @@ test('unsubscribing from store changes', () => {
   function functionToUnsubscribe() {
     throw new Error('check is still suscribed!!');
   }
-  store.subscribe(function(newState) {
+  store.subscribe(function (newState) {
     expect(newState).toEqual({ koko: newValue });
   });
   store.subscribe(functionToUnsubscribe);

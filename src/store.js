@@ -15,13 +15,13 @@ export function executeAllListeners() {
 
 export function setState(mutation) {
   if (!mutation) {
-    return;
+    throw new Error('No mutation');
   }
 
   const { path = [], newValue } = mutation;
 
   if (!path.length) {
-    return;
+    throw new Error('Empty path in mutation');
   }
 
   state = setIn(state, path, newValue);
