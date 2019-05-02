@@ -3,7 +3,7 @@ import * as storeModule from './store';
 
 export default function subscribe(mapStateToProps, store = storeModule) {
   return Child => {
-    function Wrapper(props) {
+    function Subscriber(props) {
       Component.call(this, props);
       let currentMappedProps = mapStateToProps(store.getState(), props);
 
@@ -32,8 +32,8 @@ export default function subscribe(mapStateToProps, store = storeModule) {
         createElement(Child, { ...this.props, ...currentMappedProps });
     }
 
-    return ((Wrapper.prototype = Object.create(
+    return ((Subscriber.prototype = Object.create(
       Component.prototype
-    )).constructor = Wrapper);
+    )).constructor = Subscriber);
   };
 }
