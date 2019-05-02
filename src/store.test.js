@@ -120,7 +120,7 @@ test('subscribing to store changes', () => {
   const path = ['koko'];
   store.initialize({ koko: 'loko' });
 
-  store.subscribe(function (newState) {
+  store.subscribe(function(newState) {
     expect(newState).toEqual({ koko: newValue });
   });
 
@@ -134,7 +134,7 @@ test('unsubscribing from store changes', () => {
   function functionToUnsubscribe() {
     throw new Error('check is still suscribed!!');
   }
-  store.subscribe(function (newState) {
+  store.subscribe(function(newState) {
     expect(newState).toEqual({ koko: newValue });
   });
   store.subscribe(functionToUnsubscribe);
