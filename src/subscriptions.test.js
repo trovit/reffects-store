@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import subscribe from './subscriptions';
@@ -64,8 +64,8 @@ describe('subscriptions', () => {
 
     const wrapper = mount(<SubscribedChild />);
 
-    wrapper.instance().forceUpdate = function() {
-      numCalls++;
+    wrapper.instance().forceUpdate = () => {
+      numCalls += 1;
     };
 
     expect(numCalls).toBe(0);
@@ -83,8 +83,8 @@ describe('subscriptions', () => {
 
     const wrapper = mount(<SubscribedChild />);
 
-    wrapper.instance().forceUpdate = function() {
-      numCalls++;
+    wrapper.instance().forceUpdate = () => {
+      numCalls += 1;
     };
 
     expect(numCalls).toBe(0);
@@ -110,8 +110,8 @@ describe('subscriptions', () => {
 
     const wrapper = mount(<Parent b={'a'} />);
 
-    wrapper.find(SubscribedChild).instance().forceUpdate = function() {
-      numCalls++;
+    wrapper.find(SubscribedChild).instance().forceUpdate = () => {
+      numCalls += 1;
     };
 
     expect(numCalls).toBe(0);
