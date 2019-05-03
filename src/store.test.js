@@ -131,15 +131,14 @@ test('unsubscribing from store changes', () => {
   const newValue = 'lolo';
   const path = ['koko'];
   store.initialize({ koko: 'loko' });
-  function functionToUnsubscribe() {
-    throw new Error('check is still suscribed!!');
-  }
-  store.subscribe(function(newState) {
-    expect(newState).toEqual({ koko: newValue });
-  });
-  store.subscribe(functionToUnsubscribe);
+  const spyToBeUnsubscribed = jest.fn();
+  const spyNotUnsubscribed = jest.fn();
 
-  store.unsubscribe(functionToUnsubscribe);
-
+  store.subscribe(spyNotUnsubscribed);
+  store.subscribe(spyToBeUnsubscribed);
+  store.unsubscribe(spyToBeUnsubscribed);
   store.setState({ path, newValue });
+
+  expect(spyToBeUnsubscribed).toHaveBeenCalledTimes(0);
+  expect(spyNotUnsubscribed).toHaveBeenCalledTimes(1);
 });
