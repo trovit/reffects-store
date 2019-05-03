@@ -115,30 +115,32 @@ describe('mutating values in the store', () => {
   });
 });
 
-test('subscribing to store changes', () => {
-  const newValue = 'lolo';
-  const path = ['koko'];
-  store.initialize({ koko: 'loko' });
+describe('subscriptions to store changes', () => {
+  test('subscribing to store changes', () => {
+    const newValue = 'lolo';
+    const path = ['koko'];
+    store.initialize({ koko: 'loko' });
+    const fn = jest.fn(newState => expect(newState).toEqual({ koko: newValue }));
 
-  store.subscribe(function(newState) {
-    expect(newState).toEqual({ koko: newValue });
+    store.subscribe(fn);
+    store.setState({ path, newValue });
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  store.setState({ path, newValue });
-});
+  test('unsubscribing from store changes', () => {
+    const newValue = 'lolo';
+    const path = ['koko'];
+    store.initialize({ koko: 'loko' });
+    const spyToBeUnsubscribed = jest.fn();
+    const spyNotUnsubscribed = jest.fn();
 
-test('unsubscribing from store changes', () => {
-  const newValue = 'lolo';
-  const path = ['koko'];
-  store.initialize({ koko: 'loko' });
-  const spyToBeUnsubscribed = jest.fn();
-  const spyNotUnsubscribed = jest.fn();
+    store.subscribe(spyNotUnsubscribed);
+    store.subscribe(spyToBeUnsubscribed);
+    store.unsubscribe(spyToBeUnsubscribed);
+    store.setState({ path, newValue });
 
-  store.subscribe(spyNotUnsubscribed);
-  store.subscribe(spyToBeUnsubscribed);
-  store.unsubscribe(spyToBeUnsubscribed);
-  store.setState({ path, newValue });
-
-  expect(spyToBeUnsubscribed).toHaveBeenCalledTimes(0);
-  expect(spyNotUnsubscribed).toHaveBeenCalledTimes(1);
+    expect(spyToBeUnsubscribed).toHaveBeenCalledTimes(0);
+    expect(spyNotUnsubscribed).toHaveBeenCalledTimes(1);
+  });
 });
