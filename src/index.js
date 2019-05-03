@@ -1,4 +1,4 @@
-import { setIn, getIn } from './storeUtils';
+import { setIn, getIn } from './utils';
 
 let state = {};
 let listeners = [];

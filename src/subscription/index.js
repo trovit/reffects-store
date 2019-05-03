@@ -1,5 +1,5 @@
 import { createElement, Component } from 'react';
-import * as storeModule from './store';
+import * as storeModule from '..';
 
 export default function subscribe(mapStateToProps, store = storeModule) {
   return Child => {

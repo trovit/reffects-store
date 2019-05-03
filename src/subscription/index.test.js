@@ -1,8 +1,8 @@
 import React from 'react';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import subscribe from './subscriptions';
-import * as storeModule from './store';
+import subscribe from '.';
+import * as storeModule from '..';
 
 configure({ adapter: new Adapter() });
 

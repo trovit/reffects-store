@@ -1,4 +1,4 @@
-import * as store from './store';
+import * as store from '.';
 
 afterEach(() => {
   store.initialize();
@@ -120,7 +120,9 @@ describe('subscriptions to store changes', () => {
     const newValue = 'lolo';
     const path = ['koko'];
     store.initialize({ koko: 'loko' });
-    const fn = jest.fn(newState => expect(newState).toEqual({ koko: newValue }));
+    const fn = jest.fn(newState =>
+      expect(newState).toEqual({ koko: newValue })
+    );
 
     store.subscribe(fn);
     store.setState({ path, newValue });
