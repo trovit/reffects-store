@@ -1,4 +1,4 @@
-import * as store from '.';
+import * as store from './store';
 
 afterEach(() => {
   store.initialize();

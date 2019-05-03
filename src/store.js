@@ -50,3 +50,9 @@ export function initialize(initialState = {}) {
 export function unsubscribeAllListeners() {
   listeners = [];
 }
+
+export default {
+  getState,
+  setState,
+  initialize,
+};
