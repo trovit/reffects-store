@@ -1,9 +1,12 @@
 {
   "name": "reffects-store",
   "version": "0.1.0",
-  "description": "",
+  "description": "Reffects implementation of store for React including the subscription/connection module for your components.",
+  "source": "src/index.js",
+  "module": "dist/reffects-store.es.js",
+  "main": "dist/reffects-store.js",
+  "umd:main": "dist/reffects-store.umd.js",
   "keywords": [],
-  "main": "src/index.js",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.3",
@@ -27,12 +30,15 @@
     "lodash.clone": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.setwith": "^4.3.2",
+    "microbundle": "^0.11.0",
     "prettier": "^1.16.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.0"
   },
   "scripts": {
+    "build": "microbundle",
+    "release": "npm t && git push && npm publish",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:mutants": "stryker run",

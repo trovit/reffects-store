@@ -2,7 +2,7 @@ import * as store from '.';
 
 afterEach(() => {
   store.initialize();
-  store.unsubscribeAll();
+  store.unsubscribeAllListeners();
 });
 
 describe('extracting values from the store', () => {
@@ -124,7 +124,7 @@ describe('subscriptions to store changes', () => {
       expect(newState).toEqual({ koko: newValue })
     );
 
-    store.subscribe(fn);
+    store.subscribeListener(fn);
     store.setState({ path, newValue });
 
     expect(fn).toHaveBeenCalledTimes(1);
@@ -137,9 +137,9 @@ describe('subscriptions to store changes', () => {
     const spyToBeUnsubscribed = jest.fn();
     const spyNotUnsubscribed = jest.fn();
 
-    store.subscribe(spyNotUnsubscribed);
-    store.subscribe(spyToBeUnsubscribed);
-    store.unsubscribe(spyToBeUnsubscribed);
+    store.subscribeListener(spyNotUnsubscribed);
+    store.subscribeListener(spyToBeUnsubscribed);
+    store.unsubscribeListener(spyToBeUnsubscribed);
     store.setState({ path, newValue });
 
     expect(spyToBeUnsubscribed).toHaveBeenCalledTimes(0);

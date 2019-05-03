@@ -2,7 +2,7 @@ import React from 'react';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import subscribe from '.';
-import * as storeModule from '..';
+import * as storeModule from '../store';
 
 configure({ adapter: new Adapter() });
 
@@ -40,20 +40,20 @@ describe('subscriptions', () => {
   it('should subscribe and unsubscribe to store', () => {
     const store = storeModule;
     store.initialize({ a: null });
-    jest.spyOn(store, 'subscribe');
-    jest.spyOn(store, 'unsubscribe');
+    jest.spyOn(store, 'subscribeListener');
+    jest.spyOn(store, 'unsubscribeListener');
     const SubscribedChild = subscribe(state => ({ a: state.a }), store)(Child);
 
-    expect(store.subscribe).not.toHaveBeenCalled();
+    expect(store.subscribeListener).not.toHaveBeenCalled();
     const mountedProvider = mount(<SubscribedChild />);
 
-    expect(store.subscribe).toBeCalledWith(expect.any(Function));
+    expect(store.subscribeListener).toBeCalledWith(expect.any(Function));
 
     store.setState({ path: ['a'], newValue: 'b' });
 
-    expect(store.unsubscribe).not.toHaveBeenCalled();
+    expect(store.unsubscribeListener).not.toHaveBeenCalled();
     mountedProvider.unmount();
-    expect(store.unsubscribe).toBeCalled();
+    expect(store.unsubscribeListener).toBeCalled();
   });
 
   it('should call force update when the state changes', () => {

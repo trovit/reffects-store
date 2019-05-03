@@ -1,5 +1,5 @@
 import { createElement, Component } from 'react';
-import * as storeModule from '..';
+import * as storeModule from '../store';
 
 export default function subscribe(mapStateToProps, store = storeModule) {
   return Child => {
@@ -23,10 +23,10 @@ export default function subscribe(mapStateToProps, store = storeModule) {
         update();
       };
       this.componentDidMount = () => {
-        store.subscribe(update);
+        store.subscribeListener(update);
       };
       this.componentWillUnmount = () => {
-        store.unsubscribe(update);
+        store.unsubscribeListener(update);
       };
       this.render = () =>
         createElement(Child, { ...this.props, ...currentMappedProps });
