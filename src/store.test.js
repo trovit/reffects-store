@@ -116,7 +116,7 @@ describe('mutating values in the store', () => {
 });
 
 describe('subscriptions to store changes', () => {
-  test('subscribing to store changes', () => {
+  test('subscribing a listener to store changes', () => {
     const newValue = 'lolo';
     const path = ['koko'];
     store.initialize({ koko: 'loko' });
@@ -130,7 +130,7 @@ describe('subscriptions to store changes', () => {
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
-  test('unsubscribing from store changes', () => {
+  test('unsubscribing a listener from store changes', () => {
     const newValue = 'lolo';
     const path = ['koko'];
     store.initialize({ koko: 'loko' });
@@ -144,5 +144,21 @@ describe('subscriptions to store changes', () => {
 
     expect(spyToBeUnsubscribed).toHaveBeenCalledTimes(0);
     expect(spyNotUnsubscribed).toHaveBeenCalledTimes(1);
+  });
+
+  test('unsubscribing all listeners from store changes', () => {
+    const newValue = 'lolo';
+    const path = ['koko'];
+    store.initialize({ koko: 'loko' });
+    const spyToBeUnsubscribed1 = jest.fn();
+    const spyToBeUnsubscribed2 = jest.fn();
+    
+    store.subscribeListener(spyToBeUnsubscribed1);
+    store.subscribeListener(spyToBeUnsubscribed2);
+    store.unsubscribeAllListeners();
+    store.setState({ path, newValue });
+
+    expect(spyToBeUnsubscribed1).toHaveBeenCalledTimes(0);
+    expect(spyToBeUnsubscribed2).toHaveBeenCalledTimes(0);
   });
 });
