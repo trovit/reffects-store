@@ -33,9 +33,7 @@ export function unsubscribeListener(listener) {
   const out = [];
 
   listeners.forEach(function mayUnsubscribe(currentListener) {
-    if (currentListener === listener) {
-      listener = null;
-    } else {
+    if (currentListener !== listener) {
       out.push(currentListener);
     }
   });
