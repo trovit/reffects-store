@@ -6,7 +6,14 @@
   "module": "dist/reffects-store.es.js",
   "main": "dist/reffects-store.js",
   "umd:main": "dist/reffects-store.umd.js",
-  "keywords": [],
+  "keywords": [
+    "react",
+    "store",
+    "reffects",
+    "component",
+    "state machine"
+  ],
+  "repository": "trovit/reffects-store",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.3",
