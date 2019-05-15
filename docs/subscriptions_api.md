@@ -23,25 +23,18 @@ import { VISIBILITY_FILTERS_SHOW_ALL, VISIBILITY_FILTERS_SHOW_DONE, VISIBILITY_F
 export function TodoList({ todos, handleFilterClick }) {
   return (
     <React.Fragment>
-      <ul>
-        {todos ? (
-          todos.map(function (todo) {
-            return (
-              <li key={todo.id} className={`${todo.done ? 'done' : 'undone'}`}>
-                <TodoItem id={todo.id} text={todo.text} isDone={todo.done} />
-              </li>
-            );
-          })
-        ) : (
-            <p> No todos </p>
-          )}
-      </ul>
-      <section>
-        <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_ALL)}>All</button>
-        <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_DONE)}>Done</button>
-        <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_UNDONE)}>Undone</button>
-      </section>
-    </React.Fragment>
+       <ul>
+         {todos.map(todo => (
+            <li key={todo.id}>
+                <TodoItem text={todo.text} isDone={todo.done} />
+            </li>
+         ))}
+       </ul>
+       <section>
+         <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_DONE)}>Done</button>
+         <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_UNDONE)}>Undone</button>
+       </section>
+     </React.Fragment>
   );
 }
 
@@ -76,25 +69,18 @@ import { VISIBILITY_FILTERS_SHOW_ALL, VISIBILITY_FILTERS_SHOW_DONE, VISIBILITY_F
 export function TodoList({ todos, handleFilterClick }) {
   return (
     <React.Fragment>
-      <ul>
-        {todos ? (
-          todos.map(function (todo) {
-            return (
-              <li key={todo.id} className={`${todo.done ? 'done' : 'undone'}`}>
-                <TodoItem id={todo.id} text={todo.text} isDone={todo.done} />
-              </li>
-            );
-          })
-        ) : (
-            <p> No todos </p>
-          )}
-      </ul>
-      <section>
-        <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_ALL)}>All</button>
-        <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_DONE)}>Done</button>
-        <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_UNDONE)}>Undone</button>
-      </section>
-    </React.Fragment>
+       <ul>
+         {todos.map(todo => (
+            <li key={todo.id}>
+                <TodoItem text={todo.text} isDone={todo.done} />
+            </li>
+         ))}
+       </ul>
+       <section>
+         <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_DONE)}>Done</button>
+         <button onClick={() => handleFilterClick(VISIBILITY_FILTERS_SHOW_UNDONE)}>Undone</button>
+       </section>
+     </React.Fragment>
   );
 }
 
