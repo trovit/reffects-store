@@ -13,6 +13,13 @@ We always use  [reselect](https://github.com/reduxjs/reselect)’s selectors to 
 
 Example:
 ```js
+import React from "react";
+import { dispatch } from "reffects";
+import { subscribe } from "reffects-store";
+import { visibleTodosSelector } from "../selectors";
+import TodoItem from "./TodoItem";
+import { VISIBILITY_FILTERS_SHOW_ALL, VISIBILITY_FILTERS_SHOW_DONE, VISIBILITY_FILTERS_SHOW_UNDONE } from "../constants";
+
 export function TodoList({ todos, handleFilterClick }) {
   return (
     <React.Fragment>
@@ -47,7 +54,7 @@ const mapStateToProps = function (state) {
   };
 }
 
-const reactiveWrapper = subscribe(mapStateToProps);
+const ReactiveWrapper = subscribe(mapStateToProps);
 
 export default ReactiveWrapper(TodoList);
 ```
@@ -59,6 +66,13 @@ We have written this example more verbosely than usual in order to explicitly sh
 The following example shows how we'd usually call `subscribe`:
 
 ```js
+import React from "react";
+import { dispatch } from "reffects";
+import { subscribe } from "reffects-store";
+import { visibleTodosSelector } from "../selectors";
+import TodoItem from "./TodoItem";
+import { VISIBILITY_FILTERS_SHOW_ALL, VISIBILITY_FILTERS_SHOW_DONE, VISIBILITY_FILTERS_SHOW_UNDONE } from "../constants";
+
 export function TodoList({ todos, handleFilterClick }) {
   return (
     <React.Fragment>
