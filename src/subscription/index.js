@@ -2,11 +2,12 @@ import { createElement, Component } from 'react';
 import * as storeModule from '../store';
 
 export default function subscribe(
+  ComponentToSubscribe,
   mapStateToProps,
   injectedProps = {},
   store = storeModule
 ) {
-  return Child => {
+  function subscribeChild(Child) {
     function Subscriber(props) {
       Component.call(this, props);
       let currentMappedProps = mapStateToProps(store.getState(), props);
@@ -43,5 +44,7 @@ export default function subscribe(
     return ((Subscriber.prototype = Object.create(
       Component.prototype
     )).constructor = Subscriber);
-  };
+  }
+
+  return subscribeChild(ComponentToSubscribe);
 }

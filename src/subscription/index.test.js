@@ -14,8 +14,11 @@ describe('subscriptions', () => {
   it('should pass mapped state as props', () => {
     const store = storeModule;
     store.initialize({ a: 'b' });
-    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
-      Child
+    const SubscribedChild = subscribe(
+      Child,
+      state => ({ a: state.a }),
+      null,
+      store
     );
 
     const wrapper = mount(<SubscribedChild />);
@@ -29,7 +32,7 @@ describe('subscriptions', () => {
   it('should use the store module by default', () => {
     const store = storeModule;
     store.initialize({ a: 'b' });
-    const SubscribedChild = subscribe(state => ({ a: state.a }))(Child);
+    const SubscribedChild = subscribe(Child, state => ({ a: state.a }));
 
     const wrapper = mount(<SubscribedChild />);
 
@@ -44,8 +47,11 @@ describe('subscriptions', () => {
     store.initialize({ a: null });
     jest.spyOn(store, 'subscribeListener');
     jest.spyOn(store, 'unsubscribeListener');
-    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
-      Child
+    const SubscribedChild = subscribe(
+      Child,
+      state => ({ a: state.a }),
+      null,
+      store
     );
 
     expect(store.subscribeListener).not.toHaveBeenCalled();
@@ -64,8 +70,11 @@ describe('subscriptions', () => {
     const store = storeModule;
     store.initialize({ a: null });
     let numCalls = 0;
-    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
-      Child
+    const SubscribedChild = subscribe(
+      Child,
+      state => ({ a: state.a }),
+      null,
+      store
     );
 
     const wrapper = mount(<SubscribedChild />);
@@ -85,8 +94,11 @@ describe('subscriptions', () => {
     const store = storeModule;
     store.initialize({ a: 1 });
     let numCalls = 0;
-    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
-      Child
+    const SubscribedChild = subscribe(
+      Child,
+      state => ({ a: state.a }),
+      null,
+      store
     );
 
     const wrapper = mount(<SubscribedChild />);
@@ -108,10 +120,11 @@ describe('subscriptions', () => {
     let numCalls = 0;
 
     const SubscribedChild = subscribe(
+      Child,
       (state, ownProps) => ({ a: state.a, b: ownProps.b }),
       null,
       store
-    )(Child);
+    );
 
     function Parent({ b }) {
       return <SubscribedChild b={b} />;
@@ -133,7 +146,7 @@ describe('subscriptions', () => {
   it('should return a Component with injected props if some are passed in', () => {
     const expectedProps = { a: 'loko' };
 
-    const SubscribedChild = subscribe(() => {}, { a: 'loko' })(Child);
+    const SubscribedChild = subscribe(Child, () => {}, { a: 'loko' });
     const wrapper = mount(<SubscribedChild />);
     const props = wrapper.find(Child).props();
 
@@ -146,12 +159,13 @@ describe('subscriptions', () => {
     const expectedProps = { a: 'moko' };
 
     const SubscribedChild = subscribe(
+      Child,
       state => ({
         a: state.a,
       }),
       { a: 'moko' },
       store
-    )(Child);
+    );
     const wrapper = mount(<SubscribedChild a={'loko'} />);
     const props = wrapper.find(Child).props();
 
