@@ -14,7 +14,9 @@ describe('subscriptions', () => {
   it('should pass mapped state as props', () => {
     const store = storeModule;
     store.initialize({ a: 'b' });
-    const SubscribedChild = subscribe(state => ({ a: state.a }), store)(Child);
+    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
+      Child
+    );
 
     const wrapper = mount(<SubscribedChild />);
 
@@ -42,7 +44,9 @@ describe('subscriptions', () => {
     store.initialize({ a: null });
     jest.spyOn(store, 'subscribeListener');
     jest.spyOn(store, 'unsubscribeListener');
-    const SubscribedChild = subscribe(state => ({ a: state.a }), store)(Child);
+    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
+      Child
+    );
 
     expect(store.subscribeListener).not.toHaveBeenCalled();
     const mountedProvider = mount(<SubscribedChild />);
@@ -60,7 +64,9 @@ describe('subscriptions', () => {
     const store = storeModule;
     store.initialize({ a: null });
     let numCalls = 0;
-    const SubscribedChild = subscribe(state => ({ a: state.a }), store)(Child);
+    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
+      Child
+    );
 
     const wrapper = mount(<SubscribedChild />);
 
@@ -79,7 +85,9 @@ describe('subscriptions', () => {
     const store = storeModule;
     store.initialize({ a: 1 });
     let numCalls = 0;
-    const SubscribedChild = subscribe(state => ({ a: state.a }), store)(Child);
+    const SubscribedChild = subscribe(state => ({ a: state.a }), null, store)(
+      Child
+    );
 
     const wrapper = mount(<SubscribedChild />);
 
@@ -101,6 +109,7 @@ describe('subscriptions', () => {
 
     const SubscribedChild = subscribe(
       (state, ownProps) => ({ a: state.a, b: ownProps.b }),
+      null,
       store
     )(Child);
 
@@ -119,5 +128,33 @@ describe('subscriptions', () => {
     wrapper.setProps({ b: 'koko' });
 
     expect(numCalls).toBe(1);
+  });
+
+  it('should return a Component with injected props if some are passed in', () => {
+    const expectedProps = { a: 'loko' };
+
+    const SubscribedChild = subscribe(() => {}, { a: 'loko' })(Child);
+    const wrapper = mount(<SubscribedChild />);
+    const props = wrapper.find(Child).props();
+
+    expect(props).toMatchObject(expectedProps);
+  });
+
+  it('should return a Component with injected props if some are passed in, and prevail any other prop', () => {
+    const store = storeModule;
+    store.initialize({ a: 'koko' });
+    const expectedProps = { a: 'moko' };
+
+    const SubscribedChild = subscribe(
+      state => ({
+        a: state.a,
+      }),
+      { a: 'moko' },
+      store
+    )(Child);
+    const wrapper = mount(<SubscribedChild a={'loko'} />);
+    const props = wrapper.find(Child).props();
+
+    expect(props).toMatchObject(expectedProps);
   });
 });
