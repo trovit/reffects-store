@@ -1,7 +1,7 @@
-import { createElement, Component } from 'react';
+import { createElement, memo, Component, useEffect, useState } from 'react';
 import * as storeModule from '../store';
 
-export default function subscribe(
+function subscribe(
   ComponentToSubscribe,
   mapStateToProps,
   injectedProps = {},
@@ -9,42 +9,42 @@ export default function subscribe(
 ) {
   function subscribeChild(Child) {
     function Subscriber(props) {
-      Component.call(this, props);
-      let currentMappedProps = mapStateToProps(store.getState(), props);
+      const [currentMappedProps, forceUpdate] = useState(
+        mapStateToProps(store.getState(), props)
+      );
 
-      const update = () => {
+      function update() {
         const nextMappedProps = mapStateToProps(store.getState(), props);
 
         // compares the current derived state props against the current state props
         for (const i in nextMappedProps) {
           if (nextMappedProps[i] !== currentMappedProps[i]) {
-            currentMappedProps = nextMappedProps;
-            return this.forceUpdate();
+            forceUpdate(nextMappedProps);
           }
         }
-      };
-      this.UNSAFE_componentWillReceiveProps = p => {
-        props = p;
+      }
+
+      useEffect(() => {
         update();
-      };
-      this.componentDidMount = () => {
+      });
+
+      useEffect(() => {
         store.subscribeListener(update);
-      };
-      this.componentWillUnmount = () => {
-        store.unsubscribeListener(update);
-      };
-      this.render = () =>
-        createElement(Child, {
-          ...this.props,
-          ...currentMappedProps,
-          ...injectedProps,
-        });
+
+        return () => store.unsubscribeListener(update);
+      }, []);
+
+      return createElement(Child, {
+        ...props,
+        ...currentMappedProps,
+        ...injectedProps,
+      });
     }
 
-    return ((Subscriber.prototype = Object.create(
-      Component.prototype
-    )).constructor = Subscriber);
+    return memo(Subscriber);
   }
 
   return subscribeChild(ComponentToSubscribe);
 }
+
+export default subscribe;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import subscribe from '.';
@@ -7,6 +8,11 @@ import * as storeModule from '../store';
 configure({ adapter: new Adapter() });
 
 describe('subscriptions', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+  });
+
   function Child() {
     return <div />;
   }
@@ -59,17 +65,21 @@ describe('subscriptions', () => {
 
     expect(store.subscribeListener).toBeCalledWith(expect.any(Function));
 
-    store.setState({ path: ['a'], newValue: 'b' });
+    act(() => {
+      store.setState({ path: ['a'], newValue: 'b' });
+    });
 
     expect(store.unsubscribeListener).not.toHaveBeenCalled();
     mountedProvider.unmount();
     expect(store.unsubscribeListener).toBeCalled();
   });
 
-  it('should call force update when the state changes', () => {
+  it('should update subscribed component props when the state changes', () => {
     const store = storeModule;
-    store.initialize({ a: null });
-    let numCalls = 0;
+    const initialProps = { a: null };
+    store.initialize(initialProps);
+    const expectedProps = { a: 'b' };
+
     const SubscribedChild = subscribe(
       Child,
       state => ({ a: state.a }),
@@ -78,24 +88,29 @@ describe('subscriptions', () => {
     );
 
     const wrapper = mount(<SubscribedChild />);
+    expect(wrapper.find(Child).props()).toMatchObject(initialProps);
 
-    wrapper.instance().forceUpdate = () => {
-      numCalls += 1;
-    };
+    act(() => {
+      store.setState({ path: ['a'], newValue: 'b' });
+    });
+    wrapper.update();
 
-    expect(numCalls).toBe(0);
-
-    store.setState({ path: ['a'], newValue: 'b' });
-
-    expect(numCalls).toBe(1);
+    expect(wrapper.find(Child).props()).toMatchObject(expectedProps);
   });
 
-  it("shouldn't call force update when the state is the same", () => {
+  it("shouldn't update the subscribed component props when the state is the same", () => {
+    const initialProps = { a: 1 };
     const store = storeModule;
-    store.initialize({ a: 1 });
-    let numCalls = 0;
+    store.initialize(initialProps);
+
+    let renderCount = 0;
+    function RatChild() {
+      renderCount += 1;
+      return <div />;
+    }
+
     const SubscribedChild = subscribe(
-      Child,
+      RatChild,
       state => ({ a: state.a }),
       null,
       store
@@ -103,21 +118,23 @@ describe('subscriptions', () => {
 
     const wrapper = mount(<SubscribedChild />);
 
-    wrapper.instance().forceUpdate = () => {
-      numCalls += 1;
-    };
+    expect(wrapper.find(RatChild).props()).toMatchObject(initialProps);
 
-    expect(numCalls).toBe(0);
+    act(() => {
+      store.setState({ path: ['a'], newValue: 1 });
+      store.setState({ path: ['koko'], newValue: 'loko' });
+    });
+    wrapper.update();
 
-    store.setState({ path: ['a'], newValue: 1 });
-
-    expect(numCalls).toBe(0);
+    expect(wrapper.find(RatChild).props()).toMatchObject(initialProps);
+    expect(renderCount).toBe(1);
   });
 
-  it('should call force update when the parent pass new props', () => {
+  it('should change subscribed component props when the parent pass new props', () => {
     const store = storeModule;
     store.initialize({ a: null });
-    let numCalls = 0;
+    const initialExpectedProps = { a: null, b: 'a' };
+    const finalExpectedProps = { a: null, b: 'koko' };
 
     const SubscribedChild = subscribe(
       Child,
@@ -131,16 +148,14 @@ describe('subscriptions', () => {
     }
 
     const wrapper = mount(<Parent b={'a'} />);
+    expect(wrapper.find(Child).props()).toMatchObject(initialExpectedProps);
 
-    wrapper.find(SubscribedChild).instance().forceUpdate = () => {
-      numCalls += 1;
-    };
+    act(() => {
+      wrapper.setProps({ b: 'koko' });
+    });
+    wrapper.update();
 
-    expect(numCalls).toBe(0);
-
-    wrapper.setProps({ b: 'koko' });
-
-    expect(numCalls).toBe(1);
+    expect(wrapper.find(Child).props()).toMatchObject(finalExpectedProps);
   });
 
   it('should return a Component with injected props if some are passed in', () => {
