@@ -1,4 +1,4 @@
-import { createElement, memo, Component, useEffect, useState } from 'react';
+import { createElement, memo, useEffect, useState } from 'react';
 import * as storeModule from '../store';
 
 function subscribe(
@@ -16,7 +16,7 @@ function subscribe(
       function update() {
         const nextMappedProps = mapStateToProps(store.getState(), props);
 
-        // compares the current derived state props against the current state props
+        // Compares the current derived state props against the current state props
         for (const i in nextMappedProps) {
           if (nextMappedProps[i] !== currentMappedProps[i]) {
             forceUpdate(nextMappedProps);
@@ -24,13 +24,16 @@ function subscribe(
         }
       }
 
+      // Will receive props
       useEffect(() => {
         update();
-      });
+      }, [props]);
 
       useEffect(() => {
+        // Did mount
         store.subscribeListener(update);
 
+        // Will unmount
         return () => store.unsubscribeListener(update);
       }, []);
 

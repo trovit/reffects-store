@@ -2,6 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import { withProfiler } from 'jest-react-profiler';
 import subscribe from '.';
 import * as storeModule from '../store';
 
@@ -20,32 +21,33 @@ describe('subscriptions', () => {
   it('should pass mapped state as props', () => {
     const store = storeModule;
     store.initialize({ a: 'b' });
-    const SubscribedChild = subscribe(
-      Child,
-      state => ({ a: state.a }),
-      null,
-      store
+    const SubscribedChild = withProfiler(
+      subscribe(Child, state => ({ a: state.a }), null, store)
     );
 
     const wrapper = mount(<SubscribedChild />);
-
     const child = wrapper.find(Child).first();
+
     expect(child.props()).toEqual({
       a: 'b',
     });
+    expect(SubscribedChild).toHaveCommittedTimes(1);
   });
 
   it('should use the store module by default', () => {
     const store = storeModule;
     store.initialize({ a: 'b' });
-    const SubscribedChild = subscribe(Child, state => ({ a: state.a }));
+    const SubscribedChild = withProfiler(
+      subscribe(Child, state => ({ a: state.a }))
+    );
 
     const wrapper = mount(<SubscribedChild />);
-
     const child = wrapper.find(Child).first();
+
     expect(child.props()).toEqual({
       a: 'b',
     });
+    expect(SubscribedChild).toHaveCommittedTimes(1);
   });
 
   it('should subscribe and unsubscribe to store', () => {
@@ -53,14 +55,12 @@ describe('subscriptions', () => {
     store.initialize({ a: null });
     jest.spyOn(store, 'subscribeListener');
     jest.spyOn(store, 'unsubscribeListener');
-    const SubscribedChild = subscribe(
-      Child,
-      state => ({ a: state.a }),
-      null,
-      store
+    const SubscribedChild = withProfiler(
+      subscribe(Child, state => ({ a: state.a }), null, store)
     );
 
     expect(store.subscribeListener).not.toHaveBeenCalled();
+
     const mountedProvider = mount(<SubscribedChild />);
 
     expect(store.subscribeListener).toBeCalledWith(expect.any(Function));
@@ -72,6 +72,7 @@ describe('subscriptions', () => {
     expect(store.unsubscribeListener).not.toHaveBeenCalled();
     mountedProvider.unmount();
     expect(store.unsubscribeListener).toBeCalled();
+    expect(SubscribedChild).toHaveCommittedTimes(2);
   });
 
   it('should update subscribed component props when the state changes', () => {
@@ -80,11 +81,8 @@ describe('subscriptions', () => {
     store.initialize(initialProps);
     const expectedProps = { a: 'b' };
 
-    const SubscribedChild = subscribe(
-      Child,
-      state => ({ a: state.a }),
-      null,
-      store
+    const SubscribedChild = withProfiler(
+      subscribe(Child, state => ({ a: state.a }), null, store)
     );
 
     const wrapper = mount(<SubscribedChild />);
@@ -96,6 +94,7 @@ describe('subscriptions', () => {
     wrapper.update();
 
     expect(wrapper.find(Child).props()).toMatchObject(expectedProps);
+    expect(SubscribedChild).toHaveCommittedTimes(2);
   });
 
   it("shouldn't update the subscribed component props when the state is the same", () => {
@@ -103,22 +102,13 @@ describe('subscriptions', () => {
     const store = storeModule;
     store.initialize(initialProps);
 
-    let renderCount = 0;
-    function RatChild() {
-      renderCount += 1;
-      return <div />;
-    }
-
-    const SubscribedChild = subscribe(
-      RatChild,
-      state => ({ a: state.a }),
-      null,
-      store
+    const SubscribedChild = withProfiler(
+      subscribe(Child, state => ({ a: state.a }), null, store)
     );
 
     const wrapper = mount(<SubscribedChild />);
 
-    expect(wrapper.find(RatChild).props()).toMatchObject(initialProps);
+    expect(wrapper.find(Child).props()).toMatchObject(initialProps);
 
     act(() => {
       store.setState({ path: ['a'], newValue: 1 });
@@ -126,8 +116,8 @@ describe('subscriptions', () => {
     });
     wrapper.update();
 
-    expect(wrapper.find(RatChild).props()).toMatchObject(initialProps);
-    expect(renderCount).toBe(1);
+    expect(wrapper.find(Child).props()).toMatchObject(initialProps);
+    expect(SubscribedChild).toHaveCommittedTimes(1);
   });
 
   it('should change subscribed component props when the parent pass new props', () => {
@@ -136,11 +126,13 @@ describe('subscriptions', () => {
     const initialExpectedProps = { a: null, b: 'a' };
     const finalExpectedProps = { a: null, b: 'koko' };
 
-    const SubscribedChild = subscribe(
-      Child,
-      (state, ownProps) => ({ a: state.a, b: ownProps.b }),
-      null,
-      store
+    const SubscribedChild = withProfiler(
+      subscribe(
+        Child,
+        (state, ownProps) => ({ a: state.a, b: ownProps.b }),
+        null,
+        store
+      )
     );
 
     function Parent({ b }) {
@@ -156,16 +148,20 @@ describe('subscriptions', () => {
     wrapper.update();
 
     expect(wrapper.find(Child).props()).toMatchObject(finalExpectedProps);
+    expect(SubscribedChild).toHaveCommittedTimes(3);
   });
 
   it('should return a Component with injected props if some are passed in', () => {
     const expectedProps = { a: 'loko' };
 
-    const SubscribedChild = subscribe(Child, () => {}, { a: 'loko' });
+    const SubscribedChild = withProfiler(
+      subscribe(Child, () => {}, { a: 'loko' })
+    );
     const wrapper = mount(<SubscribedChild />);
     const props = wrapper.find(Child).props();
 
     expect(props).toMatchObject(expectedProps);
+    expect(SubscribedChild).toHaveCommittedTimes(1);
   });
 
   it('should return a Component with injected props if some are passed in, and prevail any other prop', () => {
@@ -173,17 +169,20 @@ describe('subscriptions', () => {
     store.initialize({ a: 'koko' });
     const expectedProps = { a: 'moko' };
 
-    const SubscribedChild = subscribe(
-      Child,
-      state => ({
-        a: state.a,
-      }),
-      { a: 'moko' },
-      store
+    const SubscribedChild = withProfiler(
+      subscribe(
+        Child,
+        state => ({
+          a: state.a,
+        }),
+        { a: 'moko' },
+        store
+      )
     );
     const wrapper = mount(<SubscribedChild a={'loko'} />);
     const props = wrapper.find(Child).props();
 
     expect(props).toMatchObject(expectedProps);
+    expect(SubscribedChild).toHaveCommittedTimes(1);
   });
 });
