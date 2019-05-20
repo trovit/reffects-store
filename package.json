@@ -16,7 +16,6 @@
   "repository": "trovit/reffects-store",
   "dependencies": {
     "lodash.clone": "^4.5.0",
-    "lodash.get": "^4.4.2",
     "lodash.setwith": "^4.3.2"
   },
   "devDependencies": {
