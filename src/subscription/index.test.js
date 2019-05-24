@@ -148,7 +148,7 @@ describe('subscriptions', () => {
     wrapper.update();
 
     expect(wrapper.find(Child).props()).toMatchObject(finalExpectedProps);
-    expect(SubscribedChild).toHaveCommittedTimes(3);
+    expect(SubscribedChild).toHaveCommittedTimes(2);
   });
 
   it('should return a Component with injected props if some are passed in', () => {

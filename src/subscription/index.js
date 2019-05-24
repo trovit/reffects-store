@@ -1,5 +1,16 @@
-import { createElement, memo, useEffect, useState } from 'react';
+import { createElement, memo, useEffect, useReducer, useCallback } from 'react';
 import * as storeModule from '../store';
+
+const reducer = state => !state;
+
+const useForceUpdate = () => {
+  const [, dispatch] = useReducer(reducer, true);
+
+  const memoizedDispatch = useCallback(() => {
+    dispatch(null);
+  }, [dispatch]);
+  return memoizedDispatch;
+};
 
 function subscribe(
   ComponentToSubscribe,
@@ -9,18 +20,22 @@ function subscribe(
 ) {
   function subscribeChild(Child) {
     function Subscriber(props) {
-      const [currentMappedProps, forceUpdate] = useState(
-        mapStateToProps(store.getState(), props)
-      );
+      const forceUpdate = useForceUpdate();
+      let currentMappedProps = mapStateToProps(store.getState(), props);
 
       function update() {
+        let shouldForceUpdate = false;
         const nextMappedProps = mapStateToProps(store.getState(), props);
 
         // Compares the current derived state props against the current state props
         for (const i in nextMappedProps) {
           if (nextMappedProps[i] !== currentMappedProps[i]) {
-            forceUpdate(nextMappedProps);
+            shouldForceUpdate = true;
           }
+        }
+        if (shouldForceUpdate) {
+          currentMappedProps = nextMappedProps;
+          forceUpdate();
         }
       }
 
