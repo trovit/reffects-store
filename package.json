@@ -1,6 +1,6 @@
 {
   "name": "reffects-store",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "Reffects implementation of store for React including the subscription/connection module for your components.",
   "source": "src/index.js",
   "module": "dist/reffects-store.es.js",
@@ -15,7 +15,6 @@
   ],
   "repository": "trovit/reffects-store",
   "dependencies": {
-    "lodash.clone": "^4.5.0",
     "lodash.setwith": "^4.3.2"
   },
   "devDependencies": {
