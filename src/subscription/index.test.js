@@ -97,6 +97,35 @@ describe('subscriptions', () => {
     expect(SubscribedChild).toHaveCommittedTimes(2);
   });
 
+  it('should update subscribed component props when the state changes consecutively when a initial state value is set', () => {
+    const store = storeModule;
+    const initialProps = { a: 'a' };
+    store.initialize(initialProps);
+    const expectedProps = { a: 'a' };
+
+    const SubscribedChild = withProfiler(
+      subscribe(Child, state => ({ a: state.a }), null, store)
+    );
+
+    const wrapper = mount(<SubscribedChild />);
+    expect(wrapper.find(Child).props()).toMatchObject(initialProps);
+
+    act(() => {
+      store.setState({ path: ['a'], newValue: 'b' });
+    });
+
+    wrapper.update();
+
+    act(() => {
+      store.setState({ path: ['a'], newValue: 'a' });
+    });
+
+    wrapper.update();
+
+    expect(wrapper.find(Child).props()).toMatchObject(expectedProps);
+    expect(SubscribedChild).toHaveCommittedTimes(3);
+  });
+
   it("shouldn't update the subscribed component props when the state is the same", () => {
     const initialProps = { a: 1 };
     const store = storeModule;
