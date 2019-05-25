@@ -11,14 +11,6 @@ function get(obj, path, defaultValue = null) {
     );
 }
 
-export const getIn = (state, path, defaultValue) => {
-  return get(state, path, defaultValue);
-};
-
-export const setIn = (state, path, valueToSet) => {
-  return set({ ...state }, path, valueToSet);
-};
-
 function set(obj, path, newValue) {
   if (path.length === 0) {
     return obj;
@@ -31,3 +23,11 @@ function set(obj, path, newValue) {
     newValue
   );
 }
+
+export const getIn = (state, path, defaultValue) => {
+  return get(state, path, defaultValue);
+};
+
+export const setIn = (state, path, valueToSet) => {
+  return set({ ...state }, path, valueToSet);
+};
