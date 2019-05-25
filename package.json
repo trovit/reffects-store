@@ -1,6 +1,6 @@
 {
   "name": "reffects-store",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Reffects implementation of store for React including the subscription/connection module for your components.",
   "source": "src/index.js",
   "module": "dist/reffects-store.es.js",
@@ -14,9 +14,7 @@
     "state machine"
   ],
   "repository": "trovit/reffects-store",
-  "dependencies": {
-    "lodash.setwith": "^4.3.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
