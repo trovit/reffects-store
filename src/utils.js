@@ -3,12 +3,10 @@ function getPathArray(path) {
 }
 
 function get(obj, path, defaultValue = null) {
-  return getPathArray(path)
-    .filter(Boolean)
-    .reduce(
-      (a, c) => (Object.hasOwnProperty.call(a, c) ? a[c] : defaultValue),
-      obj
-    );
+  return getPathArray(path).reduce(
+    (segment, index) => (segment && segment[index]) || defaultValue,
+    obj
+  );
 }
 
 function set(obj, path, newValue) {
@@ -16,10 +14,20 @@ function set(obj, path, newValue) {
     return obj;
   }
   return getPathArray(path).reduceRight(
-    (value, currentPathKey, index, pathKeys) => ({
-      ...get(obj, pathKeys.slice(0, index)),
-      [currentPathKey]: value,
-    }),
+    (value, currentPathKey, index, pathKeys) => {
+      const objectSegment = get(obj, pathKeys.slice(0, index));
+
+      if (Array.isArray(objectSegment)) {
+        const aggregateArray = [...objectSegment];
+        aggregateArray[currentPathKey] = value;
+        return aggregateArray;
+      }
+
+      return {
+        ...objectSegment,
+        [currentPathKey]: value,
+      };
+    },
     newValue
   );
 }
