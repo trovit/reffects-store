@@ -214,4 +214,21 @@ describe('subscriptions', () => {
     expect(props).toMatchObject(expectedProps);
     expect(SubscribedChild).toHaveCommittedTimes(1);
   });
+
+  it('should force update when will receive props', () => {
+    const store = storeModule;
+    let prop = 0;
+    store.initialize({});
+    const spy = jest.fn();
+    const SubscribedChild = withProfiler(subscribe(Child, spy, store));
+
+    const wrapper = mount(<SubscribedChild a={prop} />);
+
+    prop = 1;
+
+    wrapper.setProps({ a: prop });
+
+    expect(spy).toHaveBeenCalledTimes(4);
+    expect(SubscribedChild).toHaveCommittedTimes(2);
+  });
 });
