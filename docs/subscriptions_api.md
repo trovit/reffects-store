@@ -9,13 +9,14 @@ The `subscribe` function gets as first parameter the component we want to subscr
 
 As second parameter receives one parameter, called `mapStateToProps`, which is a function that maps the application state to the properties of the component we want to subscribe.
 
-Finally, the  third parameter is an object of properties we can optionally pass to the subscribed component as options or additional properties. This is useful if we want to keep our component separated of any `reffects` function or any other side effect trigger and keep it only presentational.
+Finally, the third parameter is an object of properties we can optionally pass to the subscribed component as options or additional properties. This is useful if we want to keep our component separated of any `reffects` function or any other side effect trigger and keep it only presentational.
 
-The `subscribe` function returns our component wrapped that render only when the values mapped by `mapStateToProps` function change. 
+The `subscribe` function returns a wrapped component that renders only when the values mapped by `mapStateToProps` function change.
 
-We always use [reselect](https://github.com/reduxjs/reselect)’s selectors to write the `mapStateToProps` function because they give us memoization, composability and tools for testing out of the box. This allows to avoid writing code to optimize rerenderings.
+We always use [reselect](https://github.com/reduxjs/reselect)’s selectors to write the `mapStateToProps` function because they give us memoization, composability and tools for testing out of the box. This allows us to avoid writing code to optimize rerenderings.
 
 Example:
+
 ```js
 import React from "react";
 import { dispatch } from "reffects";
@@ -37,15 +38,15 @@ function countSelector(state) {
 }
 
 export default subscribe(
-  Counter, 
-  function (state) {
+  Counter,
+  function(state) {
     return {
-      count: countSelector(state),
+      count: countSelector(state)
     };
-  }, 
-  { 
-    onClickIncrement: dispatch('INCREMENT_COUNTER'),
-    onClickDecrement: dispatch('DECREMENT_COUNTER'),
+  },
+  {
+    onClickIncrement: dispatch("INCREMENT_COUNTER"),
+    onClickDecrement: dispatch("DECREMENT_COUNTER")
   }
 );
 ```

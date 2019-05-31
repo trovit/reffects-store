@@ -58,9 +58,6 @@ store.getState("a.b.d"); // {e: "h"}
 
 ```
 
-It uses [lodash get function](https://lodash.com/docs/4.17.11#get) inside.
-
-
 ## `setState`
 This function sets the value of a piece of state at a given path.
 
@@ -83,7 +80,5 @@ store.setState({path: "a.b.d", newValue: 30});
 
 store.getState("a.b.d"); // 30
 ```
-
-It uses [lodash setWith](https://lodash.com/docs/4.17.11#setWith) and [clone](https://lodash.com/docs/4.17.11#clone) functions inside.
 
 If a mutation is successful, all the listeners subscribed to the store are executed.

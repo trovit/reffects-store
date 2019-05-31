@@ -1,6 +1,6 @@
 {
   "name": "reffects-store",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Reffects implementation of store for React including the subscription/connection module for your components.",
   "source": "src/index.js",
   "module": "dist/reffects-store.es.js",
@@ -43,7 +43,7 @@
   },
   "scripts": {
     "build": "microbundle",
-    "release": "npm t && git push && npm run build && npm publish",
+    "release": "npm i && npm t && git push && npm run build && npm publish",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:mutants": "stryker run",

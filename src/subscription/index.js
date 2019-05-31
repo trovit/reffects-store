@@ -1,16 +1,6 @@
-import { createElement, memo, useEffect, useReducer, useCallback } from 'react';
+import { createElement, memo, useEffect } from 'react';
 import * as storeModule from '../store';
-
-const reducer = state => !state;
-
-const useForceUpdate = () => {
-  const [, dispatch] = useReducer(reducer, true);
-
-  const memoizedDispatch = useCallback(() => {
-    dispatch(null);
-  }, [dispatch]);
-  return memoizedDispatch;
-};
+import useForceUpdate from './utils';
 
 function subscribe(
   ComponentToSubscribe,
