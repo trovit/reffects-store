@@ -19,12 +19,24 @@ describe('getIn', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should return default value if not found', () => {
+  it('should return a value even if it is false', () => {
+    const expected = false;
+    const startState = {
+      otherData: 'imma string',
+      falsyValue: expected
+   };
+
+    const result = getIn(startState, 'falsyValue', expected);
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return default value when path is undefined', () => {
     const expected = 'moko';
     const startState = { a: { b: { c: 'nain' } } };
 
-    const defaultResult = getIn(startState, ['a', 'b', 'c', 'd']);
-    const result = getIn(startState, ['a', 'b', 'c', 'd'], expected);
+    const defaultResult = getIn(startState);
+    const result = getIn(startState, undefined, expected);
 
     expect(defaultResult).toStrictEqual(null);
     expect(result).toEqual(expected);

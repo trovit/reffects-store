@@ -2,9 +2,15 @@ function getPathArray(path) {
   return Array.isArray(path) ? path : path.split('.');
 }
 
-function get(obj, path, defaultValue = null) {
+function get(obj, path, defaultValue = null) { 
+  if(typeof path === 'undefined') {
+    return defaultValue;
+  }
+
   return getPathArray(path).reduce(
-    (segment, index) => (segment && segment[index]) || defaultValue,
+    (segment, index) => { 
+      return (segment && segment[index]);
+    },
     obj
   );
 }
