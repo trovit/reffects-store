@@ -180,6 +180,37 @@ describe('subscriptions', () => {
     expect(SubscribedChild).toHaveCommittedTimes(2);
   });
 
+  it('should update parent and child components props when are subscribed to the same part of the state', () => {
+    const store = storeModule;
+    const initialProps = { a: 'koko' };
+    store.initialize(initialProps);
+    const expectedProps = { a: 'loko' };
+    const SubscribedChild = withProfiler(
+      subscribe(Child, state => ({ a: state.a }), null, store)
+    );
+    function Parent() {
+      return <SubscribedChild />;
+    }
+    const SubscribedParent = withProfiler(
+      subscribe(Parent, state => ({ a: state.a }), null, store)
+    );
+
+    const wrapper = mount(<SubscribedParent />);
+    expect(wrapper.find(Parent).props()).toMatchObject(initialProps);
+    expect(wrapper.find(Child).props()).toMatchObject(initialProps);
+
+    act(() => {
+      store.setState({ path: ['a'], newValue: 'loko' });
+    });
+
+    wrapper.update();
+
+    expect(wrapper.find(Parent).props()).toMatchObject(expectedProps);
+    expect(wrapper.find(Child).props()).toMatchObject(expectedProps);
+    expect(SubscribedParent).toHaveCommittedTimes(2);
+    expect(SubscribedChild).toHaveCommittedTimes(2);
+  });
+
   it('should return a Component with injected props if some are passed in', () => {
     const expectedProps = { a: 'loko' };
 
