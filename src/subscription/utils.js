@@ -1,14 +1,10 @@
-import { useReducer, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-const reducer = state => !state;
-
-const useForceUpdate = () => {
-  const [, dispatch] = useReducer(reducer, true);
+export default function useForceUpdate() {
+  const [, dispatch] = useState(Object.create(null));
 
   const memoizedDispatch = useCallback(() => {
-    dispatch(null);
+    dispatch(Object.create(null));
   }, [dispatch]);
   return memoizedDispatch;
-};
-
-export default useForceUpdate;
+}
