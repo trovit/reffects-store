@@ -85,7 +85,7 @@ describe('mutating values in the store', () => {
     });
   });
 
-  test('using no mutation does nothing', () => {
+  test('using no mutation throws an error', () => {
     const state = { koko: { loko: { moko: 'poko' } } };
     store.initialize(state);
 
@@ -93,7 +93,7 @@ describe('mutating values in the store', () => {
     expect(store.getState()).toEqual(state);
   });
 
-  test('using an empty mutation does nothing', () => {
+  test('using an empty mutation throws an error', () => {
     const state = { koko: { loko: { moko: 'poko' } } };
     store.initialize(state, 'anyValue');
 
@@ -103,7 +103,7 @@ describe('mutating values in the store', () => {
     expect(store.getState()).toEqual(state);
   });
 
-  test('using a mutation with no path does nothing', () => {
+  test('using a mutation with no path throws an error', () => {
     const state = { koko: { loko: { moko: 'poko' } } };
     store.initialize(state, 'anyValue');
 
@@ -112,6 +112,33 @@ describe('mutating values in the store', () => {
     );
 
     expect(store.getState()).toEqual(state);
+  });
+
+  test('passing an array of mutations', () => {
+    const newValue = 'lolo';
+    const path = 'koko';
+    const path2 = ['momo', 'loko', 'moko'];
+
+    store.initialize({ koko: 'loko', momo: { loko: { moko: 'poko' } } });
+
+    store.setState([{ path, newValue }, { path: path2, newValue }]);
+
+    expect(store.getState(path)).toEqual(newValue);
+    expect(store.getState(path2)).toEqual(newValue);
+  });
+
+  test('passing an empty array of mutations throws an error', () => {
+    const state = {};
+    store.initialize(state);
+
+    expect(() => store.setState([])).toThrow(new Error('No mutations'));
+  });
+
+  test('passing an array with invalid mutations throws an error', () => {
+    const state = {};
+    store.initialize(state);
+
+    expect(() => store.setState([undefined])).toThrow(new Error('No mutation'));
   });
 });
 
@@ -152,7 +179,7 @@ describe('subscriptions to store changes', () => {
     store.initialize({ koko: 'loko' });
     const spyToBeUnsubscribed1 = jest.fn();
     const spyToBeUnsubscribed2 = jest.fn();
-    
+
     store.subscribeListener(spyToBeUnsubscribed1);
     store.subscribeListener(spyToBeUnsubscribed2);
     store.unsubscribeAllListeners();

@@ -2,17 +2,14 @@ function getPathArray(path) {
   return Array.isArray(path) ? path : path.split('.');
 }
 
-function get(obj, path, defaultValue = null) { 
-  if(typeof path === 'undefined') {
+function get(obj, path, defaultValue = null) {
+  if (typeof path === 'undefined') {
     return defaultValue;
   }
 
-  return getPathArray(path).reduce(
-    (segment, index) => { 
-      return (segment && segment[index]);
-    },
-    obj
-  );
+  return getPathArray(path).reduce((segment, index) => {
+    return segment && segment[index];
+  }, obj);
 }
 
 function set(obj, path, newValue) {

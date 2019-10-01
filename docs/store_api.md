@@ -61,7 +61,7 @@ store.getState("a.b.d"); // {e: "h"}
 ## `setState`
 This function sets the value of a piece of state at a given path.
 
-It accepts only one parameter: a *mutation*.
+It accepts only one parameter: an array of *mutations*.
 
 Each mutation is an object comprised of two properties: 
 

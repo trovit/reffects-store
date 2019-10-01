@@ -7,18 +7,28 @@ export function getState(path = []) {
   return getIn(state, path, state);
 }
 
-export function setState(mutation) {
-  if (!mutation) {
-    throw new Error('No mutation');
+export function setState(mutations) {
+  if (!Array.isArray(mutations)) {
+    mutations = [mutations];
   }
 
-  const { path = [], newValue } = mutation;
-
-  if (!path.length) {
-    throw new Error('Empty path in mutation');
+  if (mutations.length === 0) {
+    throw new Error('No mutations');
   }
 
-  state = setIn(state, path, newValue);
+  mutations.forEach(function applyMutation(mutation) {
+    if (!mutation) {
+      throw new Error('No mutation');
+    }
+
+    const { path = [], newValue } = mutation;
+
+    if (!path.length) {
+      throw new Error('Empty path in mutation');
+    }
+
+    state = setIn(state, path, newValue);
+  });
 
   listeners.forEach(function execute(currentListener) {
     currentListener(state);
