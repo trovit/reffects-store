@@ -14,7 +14,6 @@
     "state machine"
   ],
   "repository": "trovit/reffects-store",
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
@@ -36,14 +35,16 @@
     "eslint-plugin-prettier": "^3.0.1",
     "jest": "^24.7.1",
     "jest-react-profiler": "^0.1.3",
-    "microbundle": "^0.11.0",
     "prettier": "^1.16.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "^3.0.0"
+    "react-scripts": "^3.0.0",
+    "rollup": "^1.25.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.2"
   },
   "scripts": {
-    "build": "microbundle",
+    "build": "rollup -c",
     "release": "npm i && npm t && git push && npm run build && npm publish",
     "test": "jest",
     "test:watch": "jest --watch",
